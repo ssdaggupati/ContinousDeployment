@@ -1,6 +1,6 @@
 ## githubConfigUrl is the GitHub url for where you want to configure runners
 ## ex: https://github.com/myorg/myrepo or https://github.com/myorg
-githubConfigUrl: ""
+githubConfigUrl: "https://github.com/ssdaggupati/lambda-project"
 
 ## githubConfigSecret is the k8s secret information to use when authenticating via the GitHub API.
 ## You can choose to supply:
@@ -9,10 +9,10 @@ githubConfigUrl: ""
 ##   C) a pre-defined Kubernetes secret.
 ## The syntax for each of these variations is documented below.
 ## (Variation A) When using a PAT token, the syntax is as follows:
-githubConfigSecret:
+githubConfigSecret: controller-manager
   # Example:
   # github_token: "ghp_sampleSampleSampleSampleSampleSample"
-  github_token: ""
+  # github_token: ""
 #
 ## (Variation B) When using a GitHub App, the syntax is as follows:
 # githubConfigSecret:
@@ -53,13 +53,22 @@ githubConfigSecret:
 #     - example.org
 
 ## maxRunners is the max number of runners the autoscaling runner set will scale up to.
-# maxRunners: 5
+maxRunners: 5
 
 ## minRunners is the min number of idle runners. The target number of runners created will be
 ## calculated as a sum of minRunners and the number of jobs assigned to the scale set.
-# minRunners: 0
+minRunners: 1
 
 # runnerGroup: "default"
+# controllerServiceAccount:
+#   namespace: arc-runners
+#   name: github-runner
+
+serviceAccount:
+  create: true
+  name: github-runner
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::819340487192:role/GitHubSelfHosted-Lambda-Role
 
 ## name of the runner scale set to create.  Defaults to the helm release name
 # runnerScaleSetName: ""
@@ -352,10 +361,12 @@ template:
   ##                 requests:
   ##                   storage: 1Gi
   spec:
+    # serviceAccountName: github-runner
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
         command: ["/home/runner/run.sh"]
+
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
 ## The helm chart will try to find the controller deployment and its service account at installation time.

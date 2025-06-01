@@ -79,8 +79,13 @@ app.kubernetes.io/instance: {{ include "gha-runner-scale-set.scale-set-name" . }
 {{- end }}
 
 {{- define "gha-runner-scale-set.kubeModeServiceAccountName" -}}
-{{- include "gha-runner-scale-set.fullname" . }}-kube-mode
+{{- if .Values.serviceAccount.create }}
+{{- .Values.serviceAccount.name }}
+{{- else }}
+{{- fail "Missing required value: serviceAccount.name in values.yaml" }}
 {{- end }}
+{{- end }}
+
 
 {{- define "gha-runner-scale-set.dind-init-container" -}}
 {{- range $i, $val := .Values.template.spec.containers }}
