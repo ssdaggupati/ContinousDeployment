@@ -68,7 +68,7 @@ serviceAccount:
   create: true
   name: github-runner
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::819340487192:role/GitHubSelfHosted-Lambda-Role
+    eks.amazonaws.com/role-arn: arn:aws:iam::819340487192:role/lambda-inline-role #arn:aws:iam::819340487192:role/GitHubSelfHosted-Lambda-Role
 
 ## name of the runner scale set to create.  Defaults to the helm release name
 # runnerScaleSetName: ""

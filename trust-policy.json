@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::819340487192:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/B1C1B7BC9654E600BF5DCB4B2A0BEA2B"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringLike": {
+          "oidc.eks.us-east-1.amazonaws.com/id/B1C1B7BC9654E600BF5DCB4B2A0BEA2B:sub": "system:serviceaccount:arc-runners:*"
+        }
+      }
+    }
+  ]
+}
